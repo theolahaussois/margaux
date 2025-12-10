@@ -140,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Logique Principale : Séquence ---
  // --- Logique Principale : Séquence ---
+// --- Logique Principale : Séquence ---
     function startLetterPhase() {
         introVideoOverlay.classList.add('hidden');
         startMusicSequence();
@@ -160,9 +161,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!secondVideoPlayed) {
                     launchVideo2Btn.classList.remove('hidden');
                     
-                    // --- CORRECTION SCROLL ---
-                    // Force le défilement tout en bas pour voir le bouton
+                    // --- LE SECRET DU SCROLL ---
+                    // On attend un tout petit peu que le bouton s'affiche
                     setTimeout(() => {
+                        // On cible la boîte de la lettre (letterContent)
+                        // et on lui dit de scroller tout en bas (scrollHeight)
                         letterContent.scrollTo({
                             top: letterContent.scrollHeight,
                             behavior: 'smooth'
