@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Logique Principale : Séquence ---
+ // --- Logique Principale : Séquence ---
     function startLetterPhase() {
         introVideoOverlay.classList.add('hidden');
         startMusicSequence();
@@ -158,8 +159,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Au lieu de lancer auto, on affiche le bouton
                 if (!secondVideoPlayed) {
                     launchVideo2Btn.classList.remove('hidden');
-                    // Scroll automatique vers le bouton si besoin
-                    launchVideo2Btn.scrollIntoView({behavior: "smooth"});
+                    
+                    // --- CORRECTION SCROLL ---
+                    // Force le défilement tout en bas pour voir le bouton
+                    setTimeout(() => {
+                        letterContent.scrollTo({
+                            top: letterContent.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }, 100);
                 }
             });
         } else {

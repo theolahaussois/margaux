@@ -254,20 +254,30 @@ body {
 .hidden { display: none !important; }
 
 /* NOUVEAU : Bouton Pulse pour la vidéo 2 */
+/* NOUVEAU : Bouton Pulse pour la vidéo 2 */
 .pulse-btn {
     background-color: #e91e63;
     color: white;
     border: none;
     border-radius: 25px;
-    padding: 12px 25px;
+    padding: 15px 30px; /* Un peu plus gros pour mobile */
     font-size: 1.1em;
     cursor: pointer;
-    margin: 20px auto; /* Centré */
+    
+    /* IMPORTANT : Force le bouton à aller tout en bas */
+    margin-top: auto; 
+    order: 100; /* Force l'ordre visuel à la fin */
+    
     box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     align-self: center;
     flex-shrink: 0;
     display: block;
     animation: pulse 2s infinite;
+    
+    /* S'assure qu'il ne se superpose pas */
+    position: relative; 
+    z-index: 10;
+    margin-bottom: 20px; /* Petit espace en bas */
 }
 
 .pulse-btn:hover {
