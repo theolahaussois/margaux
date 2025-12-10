@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const typedMessageElement = document.getElementById('typedMessage');
     const fixedPhotos = document.querySelectorAll('.fixed-photo');
+    
+    // NOUVEAU BOUTON
+    const launchVideo2Btn = document.getElementById('launchVideo2Btn');
 
     const fullMessage = `Yooooo mon pti loup, j'espère que tu es bien en route pour ce deuxième entretien !
     Je suis trop fier de toi hihi c'est génial t'es tellement forte et impressionnante !! 
@@ -38,12 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let typeWriterTimeout;
     let messageTyped = false;
     let secondVideoPlayed = false;
-    let isVideo2Active = false; // Pour savoir si on est en mode "Vidéo 2"
+    let isVideo2Active = false;
 
     // --- Gestion de la musique en séquence ---
     music1.addEventListener('ended', () => {
-         // Si la musique 1 finit, on lance la 2
-         // MAIS on vérifie si on est pendant la vidéo 2 pour ajuster le volume tout de suite
          if (isVideo2Active) {
              music2.volume = 0.05;
          } else {
@@ -57,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         music2.pause();
         music1.currentTime = 0; 
         music2.currentTime = 0; 
-        // Reset volume
         music1.volume = 1.0;
         music2.volume = 1.0;
         isMusicPlaying = false;
@@ -93,19 +93,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Fonction pour lancer automatiquement la vidéo 2 ---
+    // --- Fonction pour lancer la vidéo 2 (DECLENCHÉE PAR LE BOUTON) ---
     function launchSecondVideo() {
         isVideo2Active = true;
         
-        // --- CORRECTION : BAISSER LES DEUX MUSIQUES ---
-        // On baisse le volume des deux, au cas où la 1 n'est pas finie
-        music1.volume = 0.05; // 5% de volume
+        // On baisse le volume des deux
+        music1.volume = 0.05; 
         music2.volume = 0.05; 
         
-        // Si la musique était en pause (bug possible), on force la lecture à bas volume
         if (isMusicPlaying) {
             if (music1.paused && music2.paused) {
-                 // Si tout est en pause mais que ça devrait jouer, on relance la 2 doucement
                  music2.play();
             }
         }
@@ -113,25 +110,31 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cacher la lettre
         letterContent.classList.remove('visible');
         
+        // Pas besoin de setTimeout long ici car c'est un clic
         setTimeout(() => {
             secondVideoOverlay.classList.remove('hidden');
             secondVideo.play().then(() => {
-                console.log("Vidéo 2 lancée automatiquement");
+                console.log("Vidéo 2 lancée avec succès (clic)");
             }).catch(e => {
-                console.log("Lecture vidéo 2 bloquée, nécessite un clic");
+                console.log("Erreur lancement vidéo 2:", e);
+                alert("Appuie sur play sur la vidéo si elle ne part pas !");
             });
-        }, 500);
+        }, 300);
     }
+
+    // --- Activation du bouton vidéo 2 ---
+    launchVideo2Btn.addEventListener('click', () => {
+        launchSecondVideo();
+    });
 
     // --- Fonction pour afficher directement le texte ---
     function displayFullMessage() {
         typedMessageElement.innerHTML = fullMessage;
         messageTyped = true;
         
+        // Afficher le bouton si la vidéo n'a pas encore été vue
         if (!secondVideoPlayed) {
-            setTimeout(() => {
-                launchSecondVideo();
-            }, 1500); 
+            launchVideo2Btn.classList.remove('hidden');
         }
     }
 
@@ -152,10 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log("Message terminé.");
                 messageTyped = true;
                 
+                // Au lieu de lancer auto, on affiche le bouton
                 if (!secondVideoPlayed) {
-                    setTimeout(() => {
-                        launchSecondVideo();
-                    }, 1500); 
+                    launchVideo2Btn.classList.remove('hidden');
+                    // Scroll automatique vers le bouton si besoin
+                    launchVideo2Btn.scrollIntoView({behavior: "smooth"});
                 }
             });
         } else {
@@ -174,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Gestion de la vidéo 2 ---
-    // Fonction commune pour la fin de la vidéo 2
     function endSecondVideo() {
         console.log("Vidéo 2 terminée/passée");
         secondVideoPlayed = true;
@@ -184,12 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
         letterContent.classList.add('visible');
         letterTitle.classList.remove('hidden');
         
-        // --- ON REMET LE SON FORT ---
-        // On remonte le volume des deux
+        // On cache le bouton car c'est fini
+        launchVideo2Btn.classList.add('hidden');
+        
+        // On remet le son
         music1.volume = 1.0;
         music2.volume = 1.0;
         
-        // Si aucune musique ne joue, on relance la 2
         if (music1.paused && music2.paused && isMusicPlaying) {
             music2.play().catch(e => console.error("Erreur reprise musique:", e));
         }
@@ -230,9 +234,10 @@ document.addEventListener('DOMContentLoaded', () => {
         
         letterContent.classList.remove('visible');
         letterTitle.classList.add('hidden');
+        launchVideo2Btn.classList.add('hidden'); // Cacher bouton
         
         clearTimeout(typeWriterTimeout);
-        stopAllMusic(); // Cela reset aussi le volume
+        stopAllMusic();
 
         fixedPhotos.forEach(photo => {
             photo.classList.add('hidden-initially');
