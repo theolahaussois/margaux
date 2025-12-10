@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon pti loup ❤</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+    <div id="introVideoOverlay" class="intro-overlay hidden">
+        <video id="introVideo" playsinline>
+            <source src="video_1.mp4" type="video/mp4">
+            Ton navigateur ne supporte pas la vidéo.
+        </video>
+        <button id="skipVideo" class="skip-btn">Passer la vidéo ▶</button>
+    </div>
+
+    <!-- NOUVELLE VIDÉO 2 -->
+    <div id="secondVideoOverlay" class="intro-overlay hidden">
+        <video id="secondVideo" playsinline>
+            <source src="video_2.mp4" type="video/mp4">
+            Ton navigateur ne supporte pas la vidéo.
+        </video>
+        <button id="skipSecondVideo" class="skip-btn">Passer la vidéo ▶</button>
+    </div>
+
+    <div class="hearts-background"></div>
+
+<div class="fixed-photo photo-tl hidden-initially">
+    <img src="baule.jpg" alt="Souvenir">
+</div>
+<div class="fixed-photo photo-tr hidden-initially">
+    <img src="buffet.jpg" alt="Souvenir">
+</div>
+<div class="fixed-photo photo-bl hidden-initially">
+    <img src="course.jpg" alt="Souvenir">
+</div>
+<div class="fixed-photo photo-br hidden-initially">
+    <img src="peniche.jpg" alt="Souvenir">
+</div>
+<div class="fixed-photo photo-ml hidden-initially">
+    <img src="plage.jpg" alt="Souvenir">
+</div>
+
+    <div class="container">
+        
+        <div class="envelope" id="envelope">
+            <div class="flap"></div>
+            <div class="card" id="letterCard">
+                <h1 id="mainTitle">Mon pti loup ❤</h1>
+                <p>Ouvre-moi !</p>
+                <div class="small-heart-message"> !</div>
+            </div>
+        </div>
+
+        <!-- CONTENU PRINCIPAL DE LA LETTRE -->
+        <div class="letter-content-wrapper">
+            <div class="letter-content" id="letterContent">
+                <h1 class="hidden" id="letterTitle">Mon pti loup ❤</h1>
+                <p class="typed-message" id="typedMessage"></p>
+            </div>
+            
+            <!-- BOUTON EN DESSOUS DE LA LETTRE -->
+            <button id="closeLetter" class="hidden">Fermer la lettre</button>
+        </div>
+        
+    </div>
+
+    <audio id="music1" src="ma-petite-patate.mp3" preload="auto"></audio>
+    <audio id="music2" src="ma-petite-patate-2.mp3" preload="auto" loop></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>

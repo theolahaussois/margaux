@@ -1,0 +1,609 @@
+body {
+    margin: 0;
+    overflow-x: hidden;
+    font-family: 'Comic Neue', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #fce4ec; 
+    color: #4a4a4a;
+    position: relative;
+    box-sizing: border-box;
+    overflow-y: auto; 
+}
+
+/* --- Vidéo Intro Plein Écran --- */
+.intro-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    z-index: 2000; /* Tout en haut */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro-overlay video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ou 'cover' si tu veux que ça remplisse tout l'écran sans bandes noires */
+}
+
+.skip-btn {
+    position: absolute;
+    bottom: 30px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.3);
+    border: 1px solid white;
+    padding: 5px 15px;
+    font-size: 0.8em;
+    z-index: 2001;
+}
+
+/* --- Cœurs qui tombent en arrière-plan --- */
+.hearts-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+.hearts-background span {
+    position: absolute;
+    display: block;
+    background: rgba(255, 105, 180, 0.3);
+    border-radius: 50%;
+    animation: fall linear infinite;
+    opacity: 0;
+}
+@keyframes fall {
+    0% { transform: translateY(-10vh) scale(0); opacity: 0; }
+    10% { opacity: 0.8; transform: translateY(0) scale(1); }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+}
+
+/* --- Photos fixes (Modifiées : Plus grandes et plus au centre) --- */
+/* --- Photos fixes dans des coeurs --- */
+.fixed-photo {
+    position: fixed;
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    z-index: 2;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    border: none !important; /* Supprime la bordure ronde */
+    border-radius: 0 !important;
+    clip-path: polygon(50% 15%, 75% 0%, 100% 25%, 100% 60%, 50% 100%, 0% 60%, 0% 25%, 25% 0%); /* Forme de coeur */
+    background: #ff69b4; /* Fond rose pour le coeur */
+    padding: 8px; /* Espace entre la photo et le bord du coeur */
+    box-sizing: content-box; /* Pour que le padding soit en plus de la width/height */
+}
+
+/* Pour s'assurer que l'image remplit bien le coeur */
+.fixed-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: polygon(50% 15%, 75% 0%, 100% 25%, 100% 60%, 50% 100%, 0% 60%, 0% 25%, 25% 0%);
+}
+
+/* Classe pour cacher les photos au début */
+.hidden-initially {
+    opacity: 0;
+}
+
+/* Positions rapprochées du centre (Utilisation de % et calc) */
+/* On augmente les % top/bottom/left/right pour les pousser vers l'intérieur */
+.photo-tl { top: 10%; left: 5%; transform: rotate(-15deg); } 
+.photo-tr { top: 12%; right: 5%; transform: rotate(10deg); }
+.photo-bl { bottom: 15%; left: 5%; transform: rotate(5deg); }
+.photo-br { bottom: 10%; right: 5%; transform: rotate(-10deg); }
+/* Celle du milieu un peu décalée */
+.photo-ml { top: 50%; left: -10px; transform: translateY(-50%) rotate(-25deg); }
+
+
+/* --- Container Principal --- */
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    min-height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 1; 
+    pointer-events: none; 
+}
+
+/* --- Enveloppe --- */
+.envelope {
+    position: relative;
+    width: 280px;
+    height: 200px;
+    background-color: #ffadcd;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.8s ease, box-shadow 0.8s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    pointer-events: auto; 
+}
+
+.envelope:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 140px solid transparent;
+    border-right: 140px solid transparent;
+    border-bottom: 100px solid #f88;
+    border-radius: 10px 10px 0 0;
+    transform-origin: top;
+    transition: transform 0.8s ease;
+    z-index: 1;
+}
+
+.envelope.open .flap {
+    transform: rotateX(180deg);
+    border-bottom: 100px solid #f55;
+}
+
+.card {
+    position: absolute;
+    width: 90%;
+    height: 90%;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+    z-index: 2;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+    overflow: hidden;
+}
+
+.envelope.open .card {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+}
+
+.card h1 {
+    font-family: 'Pacifico', cursive;
+    color: #e91e63;
+    font-size: 2em;
+    margin-bottom: 10px;
+    animation: heartbeat 2s infinite ease-in-out;
+}
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.05); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.03); }
+}
+
+/* --- Contenu de la lettre --- */
+.letter-content {
+    /* Positionnement fixe et centré */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Dimensions */
+    width: 85%; /* Un peu plus étroit pour laisser place aux grosses photos */
+    max-width: 350px;
+    max-height: 80vh; 
+    
+    /* Style */
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4); 
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 5; 
+    
+    /* Transitions */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.8s ease;
+    
+    /* FLEXBOX */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.letter-content.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.letter-content h1 {
+    font-family: 'Pacifico', cursive;
+    color: #e91e63;
+    font-size: 2em;
+    margin-bottom: 15px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Texte qui s'écrit */
+.typed-message {
+    font-size: 1.1em;
+    line-height: 1.6;
+    text-align: justify;
+    margin-bottom: 20px;
+    min-height: 50px;
+    white-space: pre-line;
+    flex-grow: 0;
+    display: block;
+}
+
+/* Helper class pour cacher */
+.hidden { display: none !important; }
+
+
+button {
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 25px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    align-self: center; /* Centrer le bouton */
+}
+
+button:hover {
+    background-color: #ff1493;
+    transform: translateY(-2px);
+}
+
+.music-toggle-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: rgba(255, 105, 180, 0.8);
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.75em;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 100;
+    padding: 0;
+    text-align: center;
+    line-height: 1;
+}
+
+/* Animations clics */
+.heart-click-animation {
+    position: fixed;
+    font-size: 2em;
+    color: #ff69b4;
+    pointer-events: none;
+    animation: fade-up 1s forwards;
+    z-index: 1000;
+}
+@keyframes fade-up {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+}
+
+/* Messages coeurs */
+.small-heart-message {
+    background-color: #ffe0f0;
+    color: #e91e63;
+    padding: 8px 15px;
+    border-radius: 20px;
+    text-align: center;
+    margin: 15px auto;
+    font-size: 0.9em;
+    font-weight: bold;
+    display: block;
+    width: fit-content;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    align-self: center;
+}
+.small-heart-message::before {
+    content: '❤'; position: absolute; top: -5px; left: -5px; font-size: 1.5em; color: rgba(255, 105, 180, 0.3); transform: rotate(-25deg);
+}
+.small-heart-message::after {
+    content: '❤'; position: absolute; bottom: -5px; right: -5px; font-size: 1.5em; color: rgba(255, 105, 180, 0.3); transform: rotate(25deg);
+}
+
+/* Curseur dactylographie */
+.typing-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    background-color: black;
+    animation: blink-caret 0.75s step-end infinite;
+    vertical-align: middle;
+}
+@keyframes blink-caret { from, to { background-color: transparent; } 50% { background-color: black; } }
+
+/* --- Responsive pour mobile --- */
+@media (max-width: 768px) {
+    /* Ajuster les photos pour mobile */
+    .fixed-photo {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Repositionner les photos pour qu'elles ne cachent pas le texte */
+    .photo-tl { top: 5%; left: 5%; }
+    .photo-tr { top: 5%; right: 5%; }
+    .photo-bl { bottom: 5%; left: 5%; }
+    .photo-br { bottom: 5%; right: 5%; }
+    .photo-ml { display: none; } /* Cacher la photo du milieu sur mobile */
+    
+    /* Ajuster l'enveloppe */
+    .envelope {
+        width: 250px;
+        height: 180px;
+    }
+    
+    .flap {
+        border-left: 125px solid transparent;
+        border-right: 125px solid transparent;
+        border-bottom: 90px solid #f88;
+    }
+    
+    /* Ajuster la lettre */
+    .letter-content {
+        width: 90%;
+        max-width: 320px;
+        padding: 15px;
+        max-height: 70vh; /* Plus de hauteur disponible */
+    }
+    
+    .typed-message {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+    
+    /* Vidéo intro */
+    .intro-overlay video {
+        object-fit: contain;
+    }
+}
+
+/* ... autres styles existants ... */
+
+/* Ajustement pour afficher 4 photos seulement sur mobile */
+@media (max-width: 768px) {
+    /* Ajuster les photos pour mobile */
+    .fixed-photo {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Repositionner les 4 photos pour qu'elles ne cachent pas le texte */
+    .photo-tl { top: 5%; left: 5%; }
+    .photo-tr { top: 5%; right: 5%; }
+    .photo-bl { bottom: 5%; left: 5%; }
+    .photo-br { bottom: 5%; right: 5%; }
+    .photo-ml { display: none; } /* Cacher la 5ème photo sur mobile */
+    
+    /* Ajuster l'enveloppe */
+    .envelope {
+        width: 250px;
+        height: 180px;
+    }
+    
+    .flap {
+        border-left: 125px solid transparent;
+        border-right: 125px solid transparent;
+        border-bottom: 90px solid #f88;
+    }
+    
+    /* Ajuster la lettre */
+    .letter-content {
+        width: 90%;
+        max-width: 320px;
+        padding: 15px;
+        max-height: 70vh;
+    }
+    
+    .typed-message {
+        font-size: 1em;
+        line-height: 1.5;
+    }
+    
+    /* Vidéo intro */
+    .intro-overlay video {
+        object-fit: contain;
+    }
+}
+
+@media (max-width: 480px) {
+    .fixed-photo {
+        width: 60px;
+        height: 60px;
+        padding: 5px;
+    }
+    
+    .photo-tl { top: 3%; left: 3%; }
+    .photo-tr { top: 3%; right: 3%; }
+    .photo-bl { bottom: 3%; left: 3%; }
+    .photo-br { bottom: 3%; right: 3%; }
+    .photo-ml { display: none; }
+    
+    .envelope {
+        width: 220px;
+        height: 160px;
+    }
+    
+    .flap {
+        border-left: 110px solid transparent;
+        border-right: 110px solid transparent;
+        border-bottom: 80px solid #f88;
+    }
+    
+    .letter-content {
+        width: 95%;
+        max-width: 300px;
+        padding: 12px;
+    }
+    
+    .card h1 {
+        font-size: 1.8em;
+    }
+    
+    .letter-content h1 {
+        font-size: 1.8em;
+    }
+}
+
+/* Style pour le bouton de la vidéo 2 */
+#showSecondVideo {
+    margin-top: 20px;
+    background-color: #e91e63;
+    font-size: 1.1em;
+    animation: pulse 2s infinite;
+}
+
+#showSecondVideo:hover {
+    background-color: #c2185b;
+    transform: scale(1.05);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+#showSecondVideo {
+    margin-top: 20px;
+    background-color: #e91e63;
+    font-size: 1.1em;
+    animation: pulse 2s infinite;
+    display: block; /* S'assurer qu'il est visible */
+}
+
+#showSecondVideo:hover {
+    background-color: #c2185b;
+    transform: scale(1.05);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Style pour le bouton de fermeture */
+#closeLetter {
+    margin-top: 10px;
+    background-color: #ff69b4;
+}
+
+/* Animation de fondu pour la lettre */
+.letter-content.fading-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Animation pour l'apparition de la vidéo 2 */
+.second-video-entering {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- Responsive pour mobile --- */
+@media (max-width: 768px) {
+    /* Ajuster les photos pour mobile - plus vers les bords */
+    .fixed-photo {
+        width: 80px;
+        height: 80px;
+    }
+    
+    /* Photos dans les coins sur mobile */
+    .photo-tl { 
+        top: 10px; 
+        left: 10px; 
+    }
+    .photo-tr { 
+        top: 10px; 
+        right: 10px; 
+    }
+    .photo-bl { 
+        bottom: 10px; 
+        left: 10px; 
+    }
+    .photo-br { 
+        bottom: 10px; 
+        right: 10px; 
+    }
+    .photo-ml { 
+        display: none; /* On cache la 5ème sur mobile */
+    }
+}
+
+@media (max-width: 480px) {
+    .fixed-photo {
+        width: 60px;
+        height: 60px;
+        padding: 4px;
+    }
+    
+    /* Encore plus petits et proches des bords sur très petits écrans */
+    .photo-tl { 
+        top: 5px; 
+        left: 5px; 
+    }
+    .photo-tr { 
+        top: 5px; 
+        right: 5px; 
+    }
+    .photo-bl { 
+        bottom: 5px; 
+        left: 5px; 
+    }
+    .photo-br { 
+        bottom: 5px; 
+        right: 5px; 
+    }
+}

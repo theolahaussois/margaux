@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Lettre d'amour</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+            background: #ffe6ec;
+            min-height: 100vh;
+            position: relative;
+            padding: 40px 0;
+        }
+
+        /* Fond de coeurs */
+        .hearts-background {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.25;
+            font-size: 40px;
+        }
+        .hearts-background span { position: absolute; color: red; }
+        .hearts-background span:nth-child(1)  { top: 5%; left: 10%; }
+        .hearts-background span:nth-child(2)  { top: 15%; left: 70%; }
+        .hearts-background span:nth-child(3)  { top: 30%; left: 20%; }
+        .hearts-background span:nth-child(4)  { top: 40%; left: 80%; }
+        .hearts-background span:nth-child(5)  { top: 55%; left: 15%; }
+        .hearts-background span:nth-child(6)  { top: 65%; left: 60%; }
+        .hearts-background span:nth-child(7)  { top: 75%; left: 35%; }
+        .hearts-background span:nth-child(8)  { top: 85%; left: 75%; }
+        .hearts-background span:nth-child(9)  { top: 10%; left: 50%; }
+        .hearts-background span:nth-child(10) { top: 50%; left: 45%; }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 24px 24px 28px;
+            border-radius: 16px;
+            max-width: 750px;
+            width: 90%;
+            margin: 0 auto;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            text-align: center;
+            backdrop-filter: blur(6px);
+        }
+
+        /* Image dans la lettre (pas au début) */
+        .photo-amour {
+            width: 100%;
+            height: 900px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #d11a4c;
+        }
+
+        .message {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #444;
+            white-space: pre-line;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        /* Bouton ouvrir la lettre */
+        #openLetterBtn {
+            margin: 40px auto 10px auto;
+            padding: 12px 28px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            background: #d11a4c;
+            color: white;
+            display: inline-block;
+        }
+
+        #openLetterBtn:hover {
+            opacity: 0.9;
+        }
+
+        /* Lettre cachée au début */
+        #letterContent {
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+        }
+
+        /* Animation d’apparition quand la lettre s’ouvre */
+        #letterContent.show-letter {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fond de coeurs -->
+    <div class="hearts-background">
+        <span>❤</span><span>❤</span><span>❤</span><span>❤</span><span>❤</span>
+        <span>❤</span><span>❤</span><span>❤</span><span>❤</span><span>❤</span>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="card">
+
+        <!-- Écran de départ : juste le bouton -->
+        <button id="openLetterBtn">Ouvrir la lettre 💌</button>
+
+        <!-- Lettre (cachée au début, avec la photo dedans) -->
+        <div id="letterContent">
+            <img src="GetAttachmentThumbnail.jpg" alt="Nous deux" class="photo-amour">
+
+            <h1>Mon pti loup ❤</h1>
+
+            <div class="message">
+Coucou mon petit loup, 
+J'espère que tu vas bien et que tu es bien en route, 
+Souffle un grand coup ferme les yeux et pense à Lopes Mendes, ou à Paraty, 
+ou au carnaval de Rio, ou au lever de soleil sur le Fitz Roy, 
+ou à une bonne raclette ou encore à un wrap au bleu sur la plage,
+ou à un gros câlin tous les deux, enfin à un joli souvenir joyeux et tu as de la chance tu en as tout plein ! 
+
+T'es la plus forte Margaux, je pense extrêmement fort à toi, j'essaie de t'envoyer plein d'ondes en wifi (je vais ouvrir les fenêtres pendant l'entretien pour que les ondes passent mieux) 
+
+Vas y À FOND LES BALLONS, montre leur tes crocs de petite patate !! 
+
+Tu es une fille incroyable et t'as tellement de qualités t'es géniale tout va bien se passer
+Il n'y a aucune raison je te jure tu m'impressionnes trop comment tu travailles tu réfléchis, enfin comment t'es tout court ! 
+
+Alors, sois toi même, n'aie aucun regret, donne toi à fond ! 
+Je suis sûr qu'ils verront alors à qui ils ont à faire hihi 
+
+Si je pouvais être à côté de toi je te serrerai très très fort dans mes bras et je te répèterai que je t'aime extrêmement fort et que je sais que t'es la plus forte et que tu vas y arriver ! 
+
+Bon courage mon petit loup, je t'aime très fort, je suis avec toi, souffle bien et donne tout !!!!!!! 
+
+Si tu as besoin tu peux m'appeler je suis là ! 
+JE T'AIME 💖
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MUSIQUES -->
+    <audio id="music1" src="ma-petite-patate.mp3" preload="auto"></audio>
+    <audio id="music2" src="ma-petite-patate-2.mp3" preload="auto" loop></audio>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById("openLetterBtn");
+            const letter = document.getElementById("letterContent");
+            const music1 = document.getElementById("music1");
+            const music2 = document.getElementById("music2");
+
+            btn.addEventListener("click", () => {
+                // Afficher la lettre avec animation
+                letter.classList.add("show-letter");
+
+                // Lancer la première musique
+                music1.play();
+
+                // Désactiver le bouton après usage (pas de pause possible)
+                btn.disabled = true;
+                btn.style.cursor = "default";
+                btn.textContent = "Je t'aime 💖";
+            });
+
+            // Quand la première musique est terminée, lancer la deuxième en boucle
+            music1.addEventListener("ended", () => {
+                music2.play();
+            });
+        });
+    </script>
+
+</body>
+</html>
